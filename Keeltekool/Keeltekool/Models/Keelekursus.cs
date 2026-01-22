@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+
+namespace Keeltekool.Models
+{
+    public class Keelekursus
+    {
+        public int Id { get; set; }
+        public string Nimetus { get; set; }
+        public string Keel { get; set; }   
+        public string Tase { get; set; } 
+        public string Kirjeldus { get; set; }
+    }
+}
