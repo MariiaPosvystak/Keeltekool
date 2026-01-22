@@ -173,8 +173,14 @@
     <Compile Include="Controllers\KeelekursusController.cs" />
     <Compile Include="Controllers\KoolitusController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\OpetajasController.cs" />
+    <Compile Include="Controllers\RegistreeriminesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\202601220933252_Keeltekool.cs" />
+    <Compile Include="Migrations\202601220933252_Keeltekool.Designer.cs">
+      <DependentUpon>202601220933252_Keeltekool.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -268,6 +274,16 @@
     <Content Include="Views\Koolitus\Details.cshtml" />
     <Content Include="Views\Koolitus\Edit.cshtml" />
     <Content Include="Views\Koolitus\Index.cshtml" />
+    <Content Include="Views\Opetajas\Create.cshtml" />
+    <Content Include="Views\Opetajas\Delete.cshtml" />
+    <Content Include="Views\Opetajas\Details.cshtml" />
+    <Content Include="Views\Opetajas\Edit.cshtml" />
+    <Content Include="Views\Opetajas\Index.cshtml" />
+    <Content Include="Views\Registreerimines\Create.cshtml" />
+    <Content Include="Views\Registreerimines\Delete.cshtml" />
+    <Content Include="Views\Registreerimines\Details.cshtml" />
+    <Content Include="Views\Registreerimines\Edit.cshtml" />
+    <Content Include="Views\Registreerimines\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -298,6 +314,11 @@
     <Content Include="Scripts\bootstrap.bundle.js.map" />
     <Content Include="Scripts\jquery-3.7.0.slim.min.map" />
     <Content Include="Scripts\jquery-3.7.0.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\202601220933252_Keeltekool.resx">
+      <DependentUpon>202601220933252_Keeltekool.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

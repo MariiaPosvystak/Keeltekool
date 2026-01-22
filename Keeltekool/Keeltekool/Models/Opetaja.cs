@@ -14,7 +14,6 @@ namespace Keeltekool.Models
         public string Nimi { get; set; }
         public string Kvalifikatsioon { get; set; }
         public string FotoPath { get; set; }
-        [ForeignKey("User")]
         public string ApplicationUserId { get; set; }
         public virtual ApplicationUser User { get; set; }
     }
