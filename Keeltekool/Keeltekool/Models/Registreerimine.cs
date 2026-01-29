@@ -5,6 +5,12 @@ using System.Web;
 
 namespace Keeltekool.Models
 {
+    public enum Staatus
+    {
+        Ootel,
+        Kinnitatud,
+        Tuhistatud
+    }
     public class Registreerimine
     {
         public int Id { get; set; }
@@ -12,6 +18,6 @@ namespace Keeltekool.Models
         public Koolitus Koolitus { get; set; }
         public string ApplicationUserId { get; set; }
         public ApplicationUser User { get; set; }
-        public string Staatus { get; set; }
+        public Staatus Staatus { get; set; }
     }
 }

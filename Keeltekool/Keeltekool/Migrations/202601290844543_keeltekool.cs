@@ -3,7 +3,7 @@
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Keeltekool : DbMigration
+    public partial class keeltekool : DbMigration
     {
         public override void Up()
         {
@@ -45,45 +45,11 @@
                         Nimi = c.String(nullable: false),
                         Kvalifikatsioon = c.String(),
                         FotoPath = c.String(),
-                        ApplicationUserId = c.String(),
-                    })
-                .PrimaryKey(t => t.Id);
-            
-            CreateTable(
-                "dbo.Registreerimines",
-                c => new
-                    {
-                        Id = c.Int(nullable: false, identity: true),
-                        KoolitusId = c.Int(nullable: false),
-                        ApplicationUserId = c.String(),
-                        Staatus = c.String(),
+                        ApplicationUserId = c.String(maxLength: 128),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Koolitus", t => t.KoolitusId, cascadeDelete: true)
-                .Index(t => t.KoolitusId);
-            
-            CreateTable(
-                "dbo.AspNetRoles",
-                c => new
-                    {
-                        Id = c.String(nullable: false, maxLength: 128),
-                        Name = c.String(nullable: false, maxLength: 256),
-                    })
-                .PrimaryKey(t => t.Id)
-                .Index(t => t.Name, unique: true, name: "RoleNameIndex");
-            
-            CreateTable(
-                "dbo.AspNetUserRoles",
-                c => new
-                    {
-                        UserId = c.String(nullable: false, maxLength: 128),
-                        RoleId = c.String(nullable: false, maxLength: 128),
-                    })
-                .PrimaryKey(t => new { t.UserId, t.RoleId })
-                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
-                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
-                .Index(t => t.UserId)
-                .Index(t => t.RoleId);
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId)
+                .Index(t => t.ApplicationUserId);
             
             CreateTable(
                 "dbo.AspNetUsers",
@@ -130,32 +96,74 @@
                 .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
                 .Index(t => t.UserId);
             
+            CreateTable(
+                "dbo.AspNetUserRoles",
+                c => new
+                    {
+                        UserId = c.String(nullable: false, maxLength: 128),
+                        RoleId = c.String(nullable: false, maxLength: 128),
+                    })
+                .PrimaryKey(t => new { t.UserId, t.RoleId })
+                .ForeignKey("dbo.AspNetUsers", t => t.UserId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetRoles", t => t.RoleId, cascadeDelete: true)
+                .Index(t => t.UserId)
+                .Index(t => t.RoleId);
+            
+            CreateTable(
+                "dbo.Registreerimines",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        KoolitusId = c.Int(nullable: false),
+                        ApplicationUserId = c.String(maxLength: 128),
+                        Staatus = c.String(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Koolitus", t => t.KoolitusId, cascadeDelete: true)
+                .ForeignKey("dbo.AspNetUsers", t => t.ApplicationUserId)
+                .Index(t => t.KoolitusId)
+                .Index(t => t.ApplicationUserId);
+            
+            CreateTable(
+                "dbo.AspNetRoles",
+                c => new
+                    {
+                        Id = c.String(nullable: false, maxLength: 128),
+                        Name = c.String(nullable: false, maxLength: 256),
+                    })
+                .PrimaryKey(t => t.Id)
+                .Index(t => t.Name, unique: true, name: "RoleNameIndex");
+            
         }
         
         public override void Down()
         {
+            DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
+            DropForeignKey("dbo.Registreerimines", "ApplicationUserId", "dbo.AspNetUsers");
+            DropForeignKey("dbo.Registreerimines", "KoolitusId", "dbo.Koolitus");
+            DropForeignKey("dbo.Koolitus", "OpetajaId", "dbo.Opetajas");
+            DropForeignKey("dbo.Opetajas", "ApplicationUserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserRoles", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserLogins", "UserId", "dbo.AspNetUsers");
             DropForeignKey("dbo.AspNetUserClaims", "UserId", "dbo.AspNetUsers");
-            DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
-            DropForeignKey("dbo.Registreerimines", "KoolitusId", "dbo.Koolitus");
-            DropForeignKey("dbo.Koolitus", "OpetajaId", "dbo.Opetajas");
             DropForeignKey("dbo.Koolitus", "KeelekursusId", "dbo.Keelekursus");
+            DropIndex("dbo.AspNetRoles", "RoleNameIndex");
+            DropIndex("dbo.Registreerimines", new[] { "ApplicationUserId" });
+            DropIndex("dbo.Registreerimines", new[] { "KoolitusId" });
+            DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
+            DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
-            DropIndex("dbo.AspNetUserRoles", new[] { "RoleId" });
-            DropIndex("dbo.AspNetUserRoles", new[] { "UserId" });
-            DropIndex("dbo.AspNetRoles", "RoleNameIndex");
-            DropIndex("dbo.Registreerimines", new[] { "KoolitusId" });
+            DropIndex("dbo.Opetajas", new[] { "ApplicationUserId" });
             DropIndex("dbo.Koolitus", new[] { "OpetajaId" });
             DropIndex("dbo.Koolitus", new[] { "KeelekursusId" });
+            DropTable("dbo.AspNetRoles");
+            DropTable("dbo.Registreerimines");
+            DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
-            DropTable("dbo.AspNetUserRoles");
-            DropTable("dbo.AspNetRoles");
-            DropTable("dbo.Registreerimines");
             DropTable("dbo.Opetajas");
             DropTable("dbo.Koolitus");
             DropTable("dbo.Keelekursus");
