@@ -34,30 +34,20 @@
                 }
             }
             var adminEmail = "Admin@kool.ee";
-            var adminUser = context.Users.FirstOrDefault(u => u.Email == adminEmail);
-
-            if (!context.Roles.Any(r => r.Name == "Admin"))
-            {
-                var role = new IdentityRole { Name = "Admin" };
-                roleManager.Create(role);
-            }
+            var adminUser = userManager.FindByEmail(adminEmail);
 
             if (adminUser == null)
             {
-                var user = new ApplicationUser { UserName = adminEmail, Email = adminEmail };
-                userManager.Create(user, "Admin_1234");
-                adminUser = user;
+                adminUser = new ApplicationUser { UserName = adminEmail, Email = adminEmail };
+                var result = userManager.Create(adminUser, "Admin_1234"); // пароль
+                if (!result.Succeeded)
+                {
+                    throw new Exception("Administraatori loomine ebaõnnestus: " + string.Join(", ", result.Errors));
+                }
             }
-
             if (!userManager.IsInRole(adminUser.Id, "Admin"))
             {
                 userManager.AddToRole(adminUser.Id, "Admin");
-            }
-
-            if (!context.Roles.Any(r => r.Name == "Admin"))
-            {
-                var role = new IdentityRole { Name = "Admin" };
-                roleManager.Create(role);
             }
 
         }
